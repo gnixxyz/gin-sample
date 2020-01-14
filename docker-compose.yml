@@ -1,0 +1,26 @@
+version: "2"
+
+services:
+  web:
+    build: .
+    volumes:
+    - .:/www
+    ports:
+    - 8000:8000
+    command: go run main.go
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: sa
+      MYSQL_DATABASE: sandbox
+      MYSQL_USER: develop
+      MYSQL_PASSWORD: develop
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+    - ./docker/db/data/:/var/lib/mysql
+    - ./docker/db/sql:/docker-entrypoint-initdb.d
+    ports:
+    - 13306:3306
